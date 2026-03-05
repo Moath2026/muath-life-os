@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global design tokens */
+:root {
+  --background: #0a0a0f;
+  --background-alt: #12121a;
+  --background-soft: #1a1a25;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --foreground: #e5e7eb;
+  --muted: #6b7280;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: theme('fontFamily.sans');
+  background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+  color: theme('colors.foreground');
+}
+
+/* Scrollbar styling for dashboard feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+.glass-card {
+  @apply bg-card border border-white/5 rounded-2xl shadow-soft backdrop-blur-md;
+}
+
+.pill {
+  @apply px-3 py-1 rounded-full text-xs font-medium bg-white/5 border border-white/10;
+}
+
+.section-title {
+  @apply flex items-center justify-between mb-3;
+}
+
+.section-title h2 {
+  @apply font-heading text-lg font-semibold tracking-tight;
+}
+
+.badge-dot {
+  @apply inline-block w-2 h-2 rounded-full mr-1.5;
+}
