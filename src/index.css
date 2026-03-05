@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  body {
+    @apply bg-bg-primary text-slate-100 font-body;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5 { @apply font-heading; }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: #12121a; }
+  ::-webkit-scrollbar-thumb { background: #2a2a40; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(22, 22, 34, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    @apply rounded-2xl shadow-xl;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-200;
+  }
+  .glass-card-hover:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 24px rgba(34, 197, 94, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .card-accent {
+    @apply glass-card;
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 8px 32px rgba(34, 197, 94, 0.15);
+  }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-accent-blue hover:bg-blue-600 text-white rounded-xl font-medium text-sm transition-all duration-150 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 bg-bg-tertiary hover:bg-slate-700 text-slate-300 rounded-xl font-medium text-sm transition-all duration-150 active:scale-95;
+  }
+
+  .input-field {
+    @apply w-full px-3 py-2 bg-bg-tertiary border border-slate-700 rounded-xl text-slate-100 text-sm placeholder-slate-500 focus:outline-none focus:border-accent-blue transition-colors;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-slate-100 hover:bg-bg-tertiary transition-all duration-150 cursor-pointer text-sm font-medium;
+  }
+
+  .nav-item.active {
+    @apply text-accent-green bg-green-500/10 border border-green-500/20;
+  }
+
+  .progress-bar-track {
+    @apply h-2 bg-bg-primary rounded-full overflow-hidden;
+  }
+
+  .stat-card {
+    @apply glass-card p-5 flex flex-col gap-1;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium;
+  }
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-green {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Bottom nav safe area */
+.bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* Gradient progress bars */
+.progress-blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.progress-purple { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.progress-green { background: linear-gradient(90deg, #10b981, #34d399); }
+.progress-green2 { background: linear-gradient(90deg, #22c55e, #4ade80); }
+.progress-sky { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
+.progress-amber { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.progress-red { background: linear-gradient(90deg, #ef4444, #f87171); }
+
+/* Timer ring */
+.timer-ring { transform: rotate(-90deg); }
+.timer-ring-fill {
+  transition: stroke-dashoffset 1s linear;
+  stroke-linecap: round;
+}
+
+/* Heatmap cells */
+.heatmap-cell {
+  @apply rounded-sm transition-colors duration-150;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+}
+
+/* Calendar */
+.cal-day {
+  @apply aspect-square flex flex-col items-center justify-center rounded-lg text-sm cursor-pointer transition-all duration-150 hover:bg-bg-tertiary relative;
+}
+.cal-day.today {
+  @apply bg-accent-blue/20 text-accent-blue font-bold border border-accent-blue/40;
+}
+.cal-day.other-month { @apply text-slate-600; }
+
+/* Mood emoji */
+.mood-btn {
+  @apply text-2xl p-2 rounded-xl hover:bg-bg-tertiary transition-colors cursor-pointer;
+}
+.mood-btn.selected { @apply bg-accent-purple/20 ring-2 ring-accent-purple/50; }
