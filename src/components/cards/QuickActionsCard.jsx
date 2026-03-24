@@ -1,10 +1,10 @@
-import { Camera, Dumbbell, Scale, Timer } from 'lucide-react'
+import { Heart, Timer, BookOpen, Target } from 'lucide-react'
 
 const ACTIONS = [
-  { icon: Camera, label: 'Log Meal', color: '#22c55e', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.25)', action: 'health' },
-  { icon: Dumbbell, label: 'Workout', color: '#a78bfa', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.25)', action: 'health' },
-  { icon: Scale, label: 'Log Weight', color: '#38bdf8', bg: 'rgba(56,189,248,0.12)', border: 'rgba(56,189,248,0.25)', action: 'health' },
+  { icon: Heart, label: 'Health', color: '#22c55e', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.25)', action: 'health' },
   { icon: Timer, label: 'Focus', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.25)', action: 'focus' },
+  { icon: BookOpen, label: 'Journal', color: '#38bdf8', bg: 'rgba(56,189,248,0.12)', border: 'rgba(56,189,248,0.25)', action: 'journal' },
+  { icon: Target, label: 'Goals', color: '#fbbf24', bg: 'rgba(251,191,36,0.12)', border: 'rgba(251,191,36,0.25)', action: 'goals' },
 ]
 
 export default function QuickActionsCard({ onNavigate }) {
