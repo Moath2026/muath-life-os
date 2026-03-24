@@ -90,7 +90,13 @@ function AppInner() {
 
             {/* Logo mark — desktop only (sidebar handles it on mobile via hamburger) */}
             <div className="hidden lg:flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-md shadow-green-500/25">
+              <div
+                className="w-7 h-7 rounded-lg flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #06b6d4, #7c3aed)',
+                  boxShadow: '0 0 14px rgba(6,182,212,0.4)',
+                }}
+              >
                 <Zap size={14} className="text-white" />
               </div>
             </div>
@@ -103,8 +109,11 @@ function AppInner() {
 
           {/* Right side — avatar */}
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg shadow-green-500/20 select-none"
-            style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}
+            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white select-none"
+            style={{
+              background: 'linear-gradient(135deg, #06b6d4, #7c3aed)',
+              boxShadow: '0 0 16px rgba(6,182,212,0.3)',
+            }}
           >
             M
           </div>

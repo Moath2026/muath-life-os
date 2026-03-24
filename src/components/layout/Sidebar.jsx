@@ -60,8 +60,11 @@ export default function Sidebar({ open, onClose }) {
         >
           <div className="flex items-center gap-2.5">
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/20"
-              style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center"
+              style={{
+                background: 'linear-gradient(135deg, #06b6d4, #7c3aed)',
+                boxShadow: '0 0 20px rgba(6,182,212,0.35)',
+              }}
             >
               <Zap size={16} className="text-white" />
             </div>

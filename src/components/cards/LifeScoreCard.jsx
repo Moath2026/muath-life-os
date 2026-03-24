@@ -79,7 +79,7 @@ export default function LifeScoreCard() {
   const trend = weekAgoScore !== null ? total - weekAgoScore : null
 
   const radius = 64
-  const stroke = 8
+  const stroke = 9
   const circumference = 2 * Math.PI * radius
   const dashOffset = circumference - (total / 100) * circumference
   const color = scoreColor(total)
@@ -89,24 +89,44 @@ export default function LifeScoreCard() {
       className="card-accent p-5 flex flex-col items-center cursor-pointer select-none"
       onClick={() => setExpanded(e => !e)}
     >
-      <p className="text-xs text-slate-500 uppercase tracking-widest mb-3 font-medium">Life Score</p>
+      <p className="text-xs uppercase tracking-widest mb-3 font-medium" style={{ color: '#475569', letterSpacing: '0.1em' }}>Life Score</p>
 
-      {/* Ring */}
+      {/* Ring with gradient stroke */}
       <div className="relative w-36 h-36">
         <svg width="144" height="144" className="timer-ring">
+          <defs>
+            <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stopColor="#06b6d4" />
+              <stop offset="50%"  stopColor="#7c3aed" />
+              <stop offset="100%" stopColor="#10b981" />
+            </linearGradient>
+          </defs>
+          {/* Track */}
           <circle cx="72" cy="72" r={radius} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={stroke} />
+          {/* Fill */}
           <circle
             cx="72" cy="72" r={radius} fill="none"
-            stroke={color} strokeWidth={stroke}
+            stroke="url(#scoreGrad)"
+            strokeWidth={stroke}
             strokeDasharray={circumference}
             strokeDashoffset={dashOffset}
             className="timer-ring-fill"
-            style={{ filter: total >= 61 ? `drop-shadow(0 0 8px ${color}80)` : 'none' }}
+            style={{ filter: 'drop-shadow(0 0 8px rgba(6,182,212,0.7))' }}
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-heading font-bold text-4xl text-white" style={{ color }}>{total}</span>
-          <span className="text-xs text-slate-500 mt-0.5">/ 100</span>
+          <span
+            className="font-heading font-bold text-4xl"
+            style={{
+              background: 'linear-gradient(135deg, #22d3ee, #a78bfa)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            {total}
+          </span>
+          <span className="text-xs mt-0.5" style={{ color: '#334155' }}>/ 100</span>
         </div>
       </div>
 

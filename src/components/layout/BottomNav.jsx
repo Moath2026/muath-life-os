@@ -39,8 +39,8 @@ export default function BottomNav() {
                 style={{
                   width: active ? 28 : 0,
                   height: 3,
-                  background: active ? '#22c55e' : 'transparent',
-                  boxShadow: active ? '0 0 10px rgba(34,197,94,0.7)' : 'none',
+                  background: active ? '#22d3ee' : 'transparent',
+                  boxShadow: active ? '0 0 10px rgba(6,182,212,0.7)' : 'none',
                   opacity: active ? 1 : 0,
                 }}
               />
@@ -49,9 +49,9 @@ export default function BottomNav() {
               <div
                 className="transition-all duration-200"
                 style={{
-                  color: active ? '#22c55e' : 'rgba(100,116,139,0.8)',
+                  color: active ? '#22d3ee' : 'rgba(100,116,139,0.8)',
                   transform: active ? 'scale(1.08)' : 'scale(1)',
-                  filter: active ? 'drop-shadow(0 0 6px rgba(34,197,94,0.5))' : 'none',
+                  filter: active ? 'drop-shadow(0 0 6px rgba(6,182,212,0.5))' : 'none',
                 }}
               >
                 <Icon size={22} strokeWidth={active ? 2.2 : 1.8} />
@@ -60,7 +60,7 @@ export default function BottomNav() {
               {/* Label */}
               <span
                 className="text-[10px] font-medium leading-none transition-colors duration-200"
-                style={{ color: active ? '#22c55e' : 'rgba(100,116,139,0.7)' }}
+                style={{ color: active ? '#22d3ee' : 'rgba(100,116,139,0.7)' }}
               >
                 {label}
               </span>

@@ -4,47 +4,38 @@
 
 /* ── Safe-area & iOS utilities ───────────────────────────────────────────── */
 @layer utilities {
-  /* Safe area insets — required for iPhone notch / Dynamic Island / Home bar */
   .pt-safe   { padding-top:    env(safe-area-inset-top,    0px); }
   .pb-safe   { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .pl-safe   { padding-left:   env(safe-area-inset-left,   0px); }
   .pr-safe   { padding-right:  env(safe-area-inset-right,  0px); }
 
-  /* Padding + base offset combinations used by header and bottom nav */
   .header-pad {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+    padding-top:    calc(env(safe-area-inset-top, 0px) + 14px);
     padding-bottom: 14px;
-    padding-left:  max(env(safe-area-inset-left,  0px), 20px);
-    padding-right: max(env(safe-area-inset-right, 0px), 20px);
+    padding-left:   max(env(safe-area-inset-left,  0px), 20px);
+    padding-right:  max(env(safe-area-inset-right, 0px), 20px);
   }
   .bottom-nav-pad {
     padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
-    padding-left:  env(safe-area-inset-left,  0px);
-    padding-right: env(safe-area-inset-right, 0px);
+    padding-left:   env(safe-area-inset-left,  0px);
+    padding-right:  env(safe-area-inset-right, 0px);
   }
 
-  /* Dynamic viewport height — avoids iOS browser chrome clipping */
   .h-dvh     { height: 100dvh; }
   .min-h-dvh { min-height: 100dvh; }
-
-  /* Momentum / bounce scrolling on iOS */
   .scroll-ios { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-
-  /* Hide native scrollbar (used for horizontal suggestion strip etc.) */
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
 }
 
-/* ── Base reset & global iOS fixes ──────────────────────────────────────── */
+/* ── Base reset ──────────────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
-    /* Remove grey tap flash on iOS */
     -webkit-tap-highlight-color: transparent;
   }
 
   html {
-    /* Prevent iOS from auto-scaling text */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
@@ -53,49 +44,65 @@
     @apply bg-bg-primary text-slate-100 font-body;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Prevent full-page rubber-band scroll on iOS */
     overscroll-behavior: none;
-    /* Subtle ambient background glow */
+    /* ── Mission Control v2: ambient space glow ── */
     background-image:
-      radial-gradient(ellipse 70% 45% at 15%  0%, rgba(59,130,246,0.08)  0%, transparent 60%),
-      radial-gradient(ellipse 55% 35% at 85% 100%, rgba(139,92,246,0.06) 0%, transparent 60%);
+      radial-gradient(ellipse 130% 65% at 50%  -5%,  rgba(6,182,212,0.09)  0%, transparent 55%),
+      radial-gradient(ellipse 70%  50% at 90%  95%,  rgba(124,58,237,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 55%  40% at 5%   80%,  rgba(16,185,129,0.04) 0%, transparent 55%);
   }
+
+  /* ── Grid texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(6,182,212,0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(6,182,212,0.028) 1px, transparent 1px);
+    background-size: 52px 52px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Everything above the grid */
+  #root { position: relative; z-index: 1; }
 
   h1, h2, h3, h4, h5 { @apply font-heading; }
 
-  /* Prevent iOS auto-zoom on input focus (must be >= 16 px) */
   input, textarea, select {
     font-size: 16px;
     -webkit-appearance: none;
     appearance: none;
   }
 
-  /* All interactive elements: no double-tap zoom delay */
   button, a, [role="button"] {
     touch-action: manipulation;
-    /* Ensure Apple HIG minimum 44 × 44 pt touch target */
     min-height: 44px;
   }
 
-  /* Desktop scrollbar styling */
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  /* ── Neon cyan scrollbar ── */
+  ::-webkit-scrollbar       { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(34,197,94,0.4); }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(6,182,212,0.22);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(6,182,212,0.45); }
 }
 
 /* ── Component classes ───────────────────────────────────────────────────── */
 @layer components {
 
-  /* Premium glass card */
+  /* ── Glass card ── */
   .glass-card {
-    background: rgba(18, 18, 28, 0.78);
+    background: rgba(6, 13, 31, 0.75);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.07);
     box-shadow:
-      0 1px 1px rgba(0,0,0,0.5),
-      0 6px 32px rgba(0,0,0,0.3),
+      0 1px 1px rgba(0,0,0,0.6),
+      0 6px 32px rgba(0,0,0,0.4),
       inset 0 1px 0 rgba(255,255,255,0.05);
     @apply rounded-2xl;
   }
@@ -104,26 +111,26 @@
     @apply glass-card transition-all duration-200;
   }
   .glass-card-hover:hover {
-    border-color: rgba(34,197,94,0.25);
+    border-color: rgba(6,182,212,0.22);
     box-shadow:
-      0 4px 32px rgba(0,0,0,0.4),
-      0 0 0 1px rgba(34,197,94,0.1),
-      inset 0 1px 0 rgba(255,255,255,0.07);
+      0 4px 32px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(6,182,212,0.08),
+      inset 0 1px 0 rgba(6,182,212,0.07);
     transform: translateY(-1px);
   }
 
-  /* Life Score card — green accent ring */
+  /* ── Accent card — cyan glow (was green) ── */
   .card-accent {
     @apply glass-card;
-    border-color: rgba(34,197,94,0.3);
+    border-color: rgba(6,182,212,0.22);
     box-shadow:
-      0 0 0 1px rgba(34,197,94,0.08),
-      0 8px 40px rgba(0,0,0,0.35),
-      0 0 80px rgba(34,197,94,0.05),
-      inset 0 1px 0 rgba(34,197,94,0.1);
+      0 0 0 1px rgba(6,182,212,0.08),
+      0 8px 40px rgba(0,0,0,0.45),
+      0 0 80px rgba(6,182,212,0.06),
+      inset 0 1px 0 rgba(6,182,212,0.09);
   }
 
-  /* Bento grid */
+  /* ── Bento grid ── */
   .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -132,10 +139,17 @@
   @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 640px)  { .bento-grid { grid-template-columns: 1fr; } }
 
-  /* Buttons */
+  /* ── Buttons ── */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-4 py-2.5 bg-accent-blue hover:bg-blue-500 active:bg-blue-700 text-white rounded-xl font-medium text-sm transition-all duration-150 active:scale-95 select-none;
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 active:scale-95 select-none;
+    background: rgba(6,182,212,0.15);
+    border: 1px solid rgba(6,182,212,0.3);
+    color: #22d3ee;
     touch-action: manipulation;
+  }
+  .btn-primary:hover {
+    background: rgba(6,182,212,0.22);
+    box-shadow: 0 0 16px rgba(6,182,212,0.2);
   }
 
   .btn-ghost {
@@ -148,35 +162,46 @@
     touch-action: manipulation;
   }
 
-  /* Input */
+  /* ── Input ── */
   .input-field {
-    @apply w-full px-3.5 py-3 bg-bg-tertiary/80 border border-white/10 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-accent-blue/50 focus:bg-bg-secondary/80 transition-colors;
-    font-size: 16px; /* prevents iOS zoom */
+    @apply w-full px-3.5 py-3 bg-bg-tertiary/80 border border-white/10 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none transition-colors;
+    font-size: 16px;
+    focus-border-color: rgba(6,182,212,0.4);
+  }
+  .input-field:focus {
+    border-color: rgba(6,182,212,0.35);
+    background: rgba(6,13,31,0.85);
+    box-shadow: 0 0 0 3px rgba(6,182,212,0.06);
   }
 
-  /* Nav items (sidebar) */
+  /* ── Sidebar nav items — cyan active ── */
   .nav-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-all duration-150 cursor-pointer text-sm font-medium select-none;
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all duration-150 cursor-pointer text-sm font-medium select-none;
     touch-action: manipulation;
   }
   .nav-item.active {
-    @apply text-accent-green bg-green-500/10 border border-green-500/20;
+    color: #22d3ee;
+    background: rgba(6,182,212,0.08);
+    border: 1px solid rgba(6,182,212,0.18);
+    box-shadow: 0 0 12px rgba(6,182,212,0.08);
   }
 
-  /* Progress bar track */
+  /* ── Progress bar track ── */
   .progress-bar-track {
     @apply h-1.5 rounded-full overflow-hidden;
     background: rgba(255,255,255,0.05);
   }
 
+  /* ── Stat card ── */
   .stat-card { @apply glass-card p-5 flex flex-col gap-1; }
 
+  /* ── Badge ── */
   .badge { @apply inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium; }
 }
 
 /* ── Gradient text ───────────────────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(135deg, #06b6d4, #7c3aed);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -187,15 +212,46 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.gradient-text-cyan {
+  background: linear-gradient(135deg, #22d3ee, #06b6d4, #0891b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 /* ── Progress bar fills ──────────────────────────────────────────────────── */
-.progress-blue   { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-.progress-purple { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-.progress-green  { background: linear-gradient(90deg, #10b981, #34d399); }
-.progress-green2 { background: linear-gradient(90deg, #22c55e, #4ade80); }
-.progress-sky    { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
-.progress-amber  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-.progress-red    { background: linear-gradient(90deg, #ef4444, #f87171); }
+.progress-cyan   {
+  background: linear-gradient(90deg, #0891b2, #06b6d4);
+  box-shadow: 0 0 8px rgba(6,182,212,0.55);
+}
+.progress-blue   {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  box-shadow: 0 0 8px rgba(59,130,246,0.45);
+}
+.progress-purple {
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  box-shadow: 0 0 8px rgba(124,58,237,0.45);
+}
+.progress-green  {
+  background: linear-gradient(90deg, #10b981, #34d399);
+  box-shadow: 0 0 8px rgba(16,185,129,0.45);
+}
+.progress-green2 {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  box-shadow: 0 0 8px rgba(34,197,94,0.45);
+}
+.progress-sky    {
+  background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+  box-shadow: 0 0 8px rgba(56,189,248,0.45);
+}
+.progress-amber  {
+  background: linear-gradient(90deg, #d97706, #f59e0b);
+  box-shadow: 0 0 8px rgba(245,158,11,0.45);
+}
+.progress-red    {
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+  box-shadow: 0 0 8px rgba(239,68,68,0.45);
+}
 
 /* ── Pomodoro / SVG ring ─────────────────────────────────────────────────── */
 .timer-ring { transform: rotate(-90deg); }
@@ -207,25 +263,23 @@
 /* ── Heatmap ─────────────────────────────────────────────────────────────── */
 .heatmap-cell { @apply rounded-sm transition-colors duration-150; }
 
-/* ── Modal overlay — bottom sheet on mobile, centered on desktop ─────────── */
+/* ── Modal ───────────────────────────────────────────────────────────────── */
 .modal-overlay {
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   @apply fixed inset-0 z-50 flex items-end sm:items-center justify-center;
-  /* let content clear the home indicator on iOS */
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* The modal panel itself becomes a bottom sheet on mobile */
 .modal-panel {
   @apply w-full sm:w-auto sm:max-w-lg sm:mx-4 sm:rounded-2xl rounded-t-3xl;
-  background: rgba(18, 18, 28, 0.96);
+  background: rgba(6, 13, 31, 0.97);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.09);
+  border: 1px solid rgba(6,182,212,0.1);
   border-bottom: none;
-  box-shadow: 0 -8px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+  box-shadow: 0 -8px 64px rgba(0,0,0,0.7), inset 0 1px 0 rgba(6,182,212,0.08);
 }
 
 /* ── Calendar ────────────────────────────────────────────────────────────── */
@@ -235,7 +289,10 @@
   min-height: 36px;
 }
 .cal-day.today {
-  @apply bg-accent-blue/20 text-accent-blue font-bold border border-accent-blue/40;
+  background: rgba(6,182,212,0.12);
+  color: #22d3ee;
+  font-weight: 700;
+  border: 1px solid rgba(6,182,212,0.35);
 }
 .cal-day.other-month { @apply text-slate-700; }
 
@@ -246,4 +303,7 @@
   min-height: 48px;
   touch-action: manipulation;
 }
-.mood-btn.selected { @apply bg-accent-purple/20 ring-2 ring-accent-purple/50; }
+.mood-btn.selected {
+  background: rgba(6,182,212,0.12);
+  box-shadow: 0 0 0 2px rgba(6,182,212,0.4);
+}
