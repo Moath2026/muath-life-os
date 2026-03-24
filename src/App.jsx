@@ -82,7 +82,7 @@ function AppInner() {
             {/* Hamburger — mobile only */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-slate-400 hover:text-white transition-colors -ml-1 p-1 rounded-lg hover:bg-white/8"
+              className="lg:hidden text-slate-400 hover:text-white transition-colors -ml-1 p-1 rounded-lg hover:bg-white/10"
               aria-label="Open menu"
             >
               <Menu size={22} />

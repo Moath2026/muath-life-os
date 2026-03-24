@@ -241,7 +241,7 @@
 
 /* ── Mood picker ─────────────────────────────────────────────────────────── */
 .mood-btn {
-  @apply text-2xl rounded-xl hover:bg-white/8 transition-colors cursor-pointer select-none flex items-center justify-center;
+  @apply text-2xl rounded-xl hover:bg-white/10 transition-colors cursor-pointer select-none flex items-center justify-center;
   min-width: 48px;
   min-height: 48px;
   touch-action: manipulation;

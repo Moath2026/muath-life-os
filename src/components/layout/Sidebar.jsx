@@ -72,7 +72,7 @@ export default function Sidebar({ open, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="lg:hidden text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/8"
+            className="lg:hidden text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
           >
             <X size={18} />
           </button>

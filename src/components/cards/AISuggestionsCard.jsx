@@ -2,11 +2,11 @@ import { useApp } from '../../context/AppContext'
 import { Sparkles } from 'lucide-react'
 
 const TYPE_COLORS = {
-  health: 'border-green-500/25 bg-green-500/8',
-  habit: 'border-amber-500/25 bg-amber-500/8',
-  focus: 'border-sky-500/25 bg-sky-500/8',
-  learning: 'border-purple-500/25 bg-purple-500/8',
-  finance: 'border-yellow-500/25 bg-yellow-500/8',
+  health: 'border-green-500/25 bg-green-500/10',
+  habit: 'border-amber-500/25 bg-amber-500/10',
+  focus: 'border-sky-500/25 bg-sky-500/10',
+  learning: 'border-purple-500/25 bg-purple-500/10',
+  finance: 'border-yellow-500/25 bg-yellow-500/10',
 }
 
 export default function AISuggestionsCard({ onNavigate }) {
