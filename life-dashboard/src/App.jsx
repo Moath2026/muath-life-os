@@ -76,144 +76,122 @@ const INITIAL_STATE = {
     investments: 0,
     shariahCompliant: true,
     expenseCategories: [
-      { id: 'e-rent', label: 'Housing', amount: 3500 },
-      { id: 'e-food', label: 'Food & Groceries', amount: 1500 },
-      { id: 'e-transport', label: 'Transport', amount: 800 },
-      { id: 'e-family', label: 'Family & Obligations', amount: 2000 },
-      { id: 'e-fun', label: 'Lifestyle', amount: 1000 },
+      { id: 'e-rent',      label: 'Housing',             amount: 3500 },
+      { id: 'e-food',      label: 'Food & Groceries',    amount: 1500 },
+      { id: 'e-transport', label: 'Transport',            amount: 800  },
+      { id: 'e-family',    label: 'Family & Obligations', amount: 2000 },
+      { id: 'e-fun',       label: 'Lifestyle',            amount: 1000 },
     ],
     debts: [
-      {
-        id: 'd-baseeta',
-        name: 'Baseeta',
-        total: 15000,
-        remaining: 15000,
-        monthlyPayment: 2500,
-        targetPayoff: '2026-04-30',
-      },
-      {
-        id: 'd-car',
-        name: 'Car Loan',
-        total: 0,
-        remaining: 0,
-        monthlyPayment: 0,
-        targetPayoff: '2026-10-31',
-      },
-      {
-        id: 'd-social',
-        name: 'Social Bank Loan',
-        total: 0,
-        remaining: 0,
-        monthlyPayment: 2700,
-        targetPayoff: '2026-10-31',
-      },
+      { id: 'd-baseeta', name: 'Baseeta',         total: 15000, remaining: 15000, monthlyPayment: 2500, targetPayoff: '2026-04-30' },
+      { id: 'd-car',     name: 'Car Loan',         total: 0,     remaining: 0,     monthlyPayment: 0,    targetPayoff: '2026-10-31' },
+      { id: 'd-social',  name: 'Social Bank Loan', total: 0,     remaining: 0,     monthlyPayment: 2700, targetPayoff: '2026-10-31' },
     ],
     history: [],
   },
   skills: {
     core: [
-      { id: 's-python', name: 'Python Basics', progress: 35, target: 100 },
-      { id: 's-n8n', name: 'n8n Automation', progress: 20, target: 100 },
-      { id: 's-apis', name: 'AI APIs', progress: 15, target: 100 },
+      { id: 's-python',    name: 'Python Basics',        progress: 35, target: 100 },
+      { id: 's-n8n',       name: 'n8n Automation',       progress: 20, target: 100 },
+      { id: 's-apis',      name: 'AI APIs',              progress: 15, target: 100 },
       { id: 's-langchain', name: 'LangChain / AI Agents', progress: 10, target: 100 },
-      { id: 's-fin', name: 'Financial Analysis', progress: 30, target: 100 },
+      { id: 's-fin',       name: 'Financial Analysis',   progress: 30, target: 100 },
     ],
     ielts: [
-      { id: 'i-reading', name: 'Reading', progress: 25, target: 100 },
-      { id: 'i-writing', name: 'Writing', progress: 20, target: 100 },
+      { id: 'i-reading',   name: 'Reading',   progress: 25, target: 100 },
+      { id: 'i-writing',   name: 'Writing',   progress: 20, target: 100 },
       { id: 'i-listening', name: 'Listening', progress: 30, target: 100 },
-      { id: 'i-speaking', name: 'Speaking', progress: 15, target: 100 },
+      { id: 'i-speaking',  name: 'Speaking',  progress: 15, target: 100 },
     ],
   },
   calendar: {
     events: [
-      {
-        id: 'c-flight-1',
-        date: new Date().toISOString().slice(0, 10),
-        title: 'Flight Duty',
-        type: 'Flight',
-      },
-      {
-        id: 'c-study-1',
-        date: new Date().toISOString().slice(0, 10),
-        title: 'Evening Python Study',
-        type: 'Study',
-      },
+      { id: 'c-flight-1', date: new Date().toISOString().slice(0, 10), title: 'Flight Duty',        type: 'Flight' },
+      { id: 'c-study-1',  date: new Date().toISOString().slice(0, 10), title: 'Evening Python Study', type: 'Study'  },
     ],
   },
-  pomodoro: {
-    sessionsByDate: {},
-  },
-  journal: {
-    entries: [],
-  },
+  pomodoro: { sessionsByDate: {} },
+  journal:  { entries: [] },
 };
 
-const SECTIONS = ['dashboard', 'goals', 'finance', 'skills', 'calendar', 'pomodoro', 'journal'];
+/* ─── Navigation config ───────────────────────────────────────────────────── */
+const NAV = [
+  { key: 'dashboard', label: 'Dashboard', icon: '⌂',  emoji: '🏠' },
+  { key: 'goals',     label: 'Goals',     icon: '◎',  emoji: '🎯' },
+  { key: 'finance',   label: 'Finance',   icon: '◈',  emoji: '💸' },
+  { key: 'skills',    label: 'Skills',    icon: '◇',  emoji: '📚' },
+  { key: 'calendar',  label: 'Calendar',  icon: '▦',  emoji: '📆' },
+  { key: 'pomodoro',  label: 'Focus',     icon: '◉',  emoji: '⏱️' },
+  { key: 'journal',   label: 'Journal',   icon: '◫',  emoji: '📓' },
+];
 
+/* ─── Sidebar icon badge ──────────────────────────────────────────────────── */
+function NavIcon({ children, active }) {
+  return (
+    <div
+      style={{
+        width: 30,
+        height: 30,
+        borderRadius: 9,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 13,
+        flexShrink: 0,
+        background: active ? 'rgba(6,182,212,0.12)' : 'rgba(255,255,255,0.04)',
+        border: `1px solid ${active ? 'rgba(6,182,212,0.25)' : 'rgba(255,255,255,0.06)'}`,
+        boxShadow: active ? '0 0 8px rgba(6,182,212,0.2)' : 'none',
+        transition: 'all 0.2s ease',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* ─── Main App ────────────────────────────────────────────────────────────── */
 function App() {
-  const [state, setState] = useLocalStorage(STORAGE_KEY, INITIAL_STATE);
-  const [activeSection, setActiveSection] = useState('dashboard');
-  const [theme, setTheme] = useState(() => {
-    if (typeof document === 'undefined') return 'dark';
-    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-  });
-  const [exportJson, setExportJson] = useState('');
-  const [isExportOpen, setIsExportOpen] = useState(false);
-  const [isImportOpen, setIsImportOpen] = useState(false);
-  const [importJson, setImportJson] = useState('');
-  const [selectedGoalId, setSelectedGoalId] = useState(null);
+  const [state, setState]                       = useLocalStorage(STORAGE_KEY, INITIAL_STATE);
+  const [activeSection, setActiveSection]       = useState('dashboard');
+  const [exportJson, setExportJson]             = useState('');
+  const [isExportOpen, setIsExportOpen]         = useState(false);
+  const [isImportOpen, setIsImportOpen]         = useState(false);
+  const [importJson, setImportJson]             = useState('');
+  const [selectedGoalId, setSelectedGoalId]     = useState(null);
   const [pomodoroShortcutTick, setPomodoroShortcutTick] = useState(0);
 
-  // Keep helpers-based persistence in sync with hook-based state.
-  useEffect(() => {
-    saveData(state);
-  }, [state]);
-
-  // Theme management (dark by default with toggle).
+  // Always dark mode for mission-control aesthetic.
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    window.localStorage.setItem('muath-theme', theme);
-  }, [theme]);
+    document.documentElement.classList.add('dark');
+  }, []);
+
+  // Keep helpers-based persistence in sync.
+  useEffect(() => { saveData(state); }, [state]);
 
   // Global keyboard shortcuts.
   useEffect(() => {
     function onKeyDown(e) {
       const tag = e.target.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return;
-
-      // Ctrl + N → add new goal
       if (e.ctrlKey && e.key.toLowerCase() === 'n') {
         e.preventDefault();
         setActiveSection('goals');
         document.dispatchEvent(new CustomEvent('open-add-goal'));
       }
-
-      // Ctrl + P → start Pomodoro
       if (e.ctrlKey && e.key.toLowerCase() === 'p') {
         e.preventDefault();
         setActiveSection('pomodoro');
         setPomodoroShortcutTick((t) => t + 1);
       }
-
-      // Ctrl + J → open journal
       if (e.ctrlKey && e.key.toLowerCase() === 'j') {
         e.preventDefault();
         setActiveSection('journal');
       }
-
-      // Esc → close export/import modals
       if (e.key === 'Escape') {
         setIsExportOpen(false);
         setIsImportOpen(false);
       }
-
-      // Space → toggle selected task
       if (e.code === 'Space') {
         if (!selectedGoalId) return;
         e.preventDefault();
@@ -225,7 +203,6 @@ function App() {
         }));
       }
     }
-
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [selectedGoalId, setState]);
@@ -248,16 +225,21 @@ function App() {
 
   const monthlySurplus = useMemo(() => {
     const { finances } = state;
-    const totalExpenses = finances.expenseCategories.reduce(
-      (sum, e) => sum + Number(e.amount || 0),
-      0,
-    );
-    const totalDebtPayments = finances.debts.reduce(
-      (sum, d) => sum + Number(d.monthlyPayment || 0),
-      0,
-    );
+    const totalExpenses = finances.expenseCategories.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+    const totalDebtPayments = finances.debts.reduce((sum, d) => sum + Number(d.monthlyPayment || 0), 0);
     return finances.monthlyIncome - totalExpenses - totalDebtPayments - finances.investments;
   }, [state.finances]);
+
+  const motivationMessages = [
+    'Every focused hour builds your new career.',
+    'Small consistent steps beat random intensity.',
+    'Design your schedule around your flights, not the other way around.',
+    'Shariah-compliant wealth + AI skills = long-term independence.',
+    'Treat today like a client project for your future self.',
+  ];
+  const motivationMessage = motivationMessages[
+    Math.floor((aiProgress + ieltsProgress) % motivationMessages.length)
+  ];
 
   function updateSection(partial) {
     setState((prev) => ({ ...prev, ...partial }));
@@ -276,148 +258,255 @@ function App() {
       setIsImportOpen(false);
       setImportJson('');
     } catch {
-      // Keep simple: invalid JSON will be logged in helpers.
       alert('Invalid JSON. Please check and try again.');
     }
   }
 
-  const motivationMessage = useMemo(() => {
-    const messages = [
-      'Every focused hour builds your new career.',
-      'Small consistent steps beat random intensity.',
-      'Design your schedule around your flights, not the other way around.',
-      'Shariah-compliant wealth + AI skills = long-term independence.',
-      'Treat today like a client project for your future self.',
-    ];
-    const idx =
-      (aiProgress + ieltsProgress + (state.finances.savings / (state.finances.savingsTarget || 1)) * 100) %
-      messages.length;
-    return messages[Math.floor(idx)];
-  }, [aiProgress, ieltsProgress, state.finances.savings, state.finances.savingsTarget]);
-
-  const sectionLabel = {
-    dashboard: 'Dashboard',
-    goals: 'Goals',
-    finance: 'Finance',
-    skills: 'Skills',
-    calendar: 'Calendar',
-    pomodoro: 'Focus',
-    journal: 'Journal',
-  }[activeSection];
+  const activeNav = NAV.find((n) => n.key === activeSection);
 
   return (
     <div className="app-shell">
-      {/* Sidebar for desktop */}
+
+      {/* ── Sidebar ───────────────────────────────────────────────────── */}
       <aside className="sidebar">
-        <div className="flex items-center gap-3 px-5 pt-5 pb-4 border-b border-white/5">
-          <div className="h-9 w-9 rounded-2xl bg-gradient-to-br from-accentBlue to-accentPurple flex items-center justify-center text-xs font-mono font-bold shadow-soft">
+        {/* Logo */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            padding: '20px 16px 16px',
+            borderBottom: '1px solid rgba(6,182,212,0.08)',
+          }}
+        >
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: 'linear-gradient(135deg,#06b6d4 0%,#7c3aed 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 12,
+              fontFamily: "'Space Mono',monospace",
+              fontWeight: 700,
+              color: '#fff',
+              boxShadow: '0 0 20px rgba(6,182,212,0.35)',
+              flexShrink: 0,
+            }}
+          >
             ML
           </div>
-          <div className="flex flex-col">
-            <span className="font-heading text-sm font-semibold tracking-tight">
+          <div>
+            <div
+              style={{
+                fontFamily: "'Outfit',system-ui,sans-serif",
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
+                color: '#f1f5f9',
+              }}
+            >
               Muath Life OS
-            </span>
-            <span className="text-[11px] text-slate-400">
-              From flight attendant → AI & fintech
-            </span>
+            </div>
+            <div style={{ fontSize: 10, color: '#334155', marginTop: 1 }}>
+              Flight attendant → AI operator
+            </div>
           </div>
         </div>
 
-        <nav className="flex-1 px-4 py-4 space-y-1 text-xs">
-          {SECTIONS.map((sec) => (
+        {/* Nav items */}
+        <nav style={{ flex: 1, padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {NAV.map(({ key, label, icon }) => (
             <button
-              key={sec}
+              key={key}
               type="button"
-              onClick={() => setActiveSection(sec)}
-              className={`w-full sidebar-nav-item ${
-                activeSection === sec ? 'sidebar-nav-item-active' : ''
-              }`}
+              onClick={() => setActiveSection(key)}
+              className={`sidebar-nav-item ${activeSection === key ? 'sidebar-nav-item-active' : ''}`}
             >
-              <span className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-[11px] font-mono text-slate-300">
-                {sec === 'dashboard' && 'DB'}
-                {sec === 'goals' && 'GL'}
-                {sec === 'finance' && 'Fi'}
-                {sec === 'skills' && 'Sk'}
-                {sec === 'calendar' && 'Ca'}
-                {sec === 'pomodoro' && 'Fo'}
-                {sec === 'journal' && 'Jr'}
-              </span>
-              <span className="capitalize">{sectionLabelFromKey(sec)}</span>
+              <NavIcon active={activeSection === key}>{icon}</NavIcon>
+              <span>{label}</span>
             </button>
           ))}
 
-          <div className="mt-6 px-1 space-y-2 text-[11px] text-slate-400">
-            <div className="flex items-center justify-between">
-              <span className="uppercase tracking-widest text-[10px] text-slate-500">
-                Keyboard
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <span className="kbd">Ctrl + N · New goal</span>
-              <span className="kbd">Ctrl + P · Pomodoro</span>
-              <span className="kbd">Ctrl + J · Journal</span>
-              <span className="kbd">Space · Toggle task</span>
-              <span className="kbd">Esc · Close modals</span>
+          {/* Keyboard shortcuts */}
+          <div
+            style={{
+              marginTop: 20,
+              padding: '12px',
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.02)',
+              border: '1px solid rgba(255,255,255,0.04)',
+            }}
+          >
+            <p
+              style={{
+                fontSize: 9,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: '#1e293b',
+                marginBottom: 8,
+              }}
+            >
+              Shortcuts
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {[
+                ['Ctrl+N', 'New goal'],
+                ['Ctrl+P', 'Pomodoro'],
+                ['Ctrl+J', 'Journal'],
+                ['Space',  'Toggle task'],
+              ].map(([key, desc]) => (
+                <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span className="kbd">{key}</span>
+                  <span style={{ fontSize: 10, color: '#334155' }}>{desc}</span>
+                </div>
+              ))}
             </div>
           </div>
         </nav>
 
-        <div className="px-4 pb-4 pt-2 border-t border-white/5 text-[11px] text-slate-500 space-y-1">
-          <p>Debt freedom in {debtDaysRemaining} days.</p>
-          <p>Target income: 60k–100k SAR / month.</p>
+        {/* Footer */}
+        <div
+          style={{
+            padding: '12px 16px',
+            borderTop: '1px solid rgba(6,182,212,0.06)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <div
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                background: '#10b981',
+                boxShadow: '0 0 6px rgba(16,185,129,0.8)',
+              }}
+            />
+            <span style={{ fontSize: 10, color: '#334155' }}>System online</span>
+          </div>
+          <p style={{ fontSize: 10, color: '#1e293b', lineHeight: 1.5 }}>
+            Debt freedom in{' '}
+            <span style={{ color: '#34d399', fontWeight: 600 }}>{debtDaysRemaining}d</span>
+          </p>
+          <p style={{ fontSize: 10, color: '#1e293b' }}>
+            Target: 60k–100k SAR / month
+          </p>
         </div>
       </aside>
 
-      {/* Main panel */}
+      {/* ── Main panel ────────────────────────────────────────────────── */}
       <div className="main-panel">
-        {/* Top bar */}
-        <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 pt-4 pb-3 border-b border-white/5 bg-black/40 backdrop-blur-md sticky top-0 z-30">
-          <div className="flex flex-col gap-0.5">
-            <div className="flex items-center gap-2">
-              <h1 className="font-heading text-lg sm:text-xl font-semibold tracking-tight">
-                {sectionLabel}
+
+        {/* Header */}
+        <header
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '14px 20px',
+            borderBottom: '1px solid rgba(6,182,212,0.07)',
+            background: 'rgba(3,7,18,0.8)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            position: 'sticky',
+            top: 0,
+            zIndex: 30,
+          }}
+        >
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 2 }}>
+              <h1
+                style={{
+                  fontFamily: "'Outfit',system-ui,sans-serif",
+                  fontSize: '1.1rem',
+                  fontWeight: 700,
+                  letterSpacing: '-0.025em',
+                  margin: 0,
+                  color: '#f1f5f9',
+                }}
+              >
+                {activeNav?.label || 'Dashboard'}
               </h1>
-              <span className="pill-accent text-[10px] hidden sm:inline-flex">
-                Asia/Riyadh · Flight schedule friendly
+              <span
+                className="pill-cyan"
+                style={{ fontSize: '10px', display: 'none' }}
+                id="region-pill"
+              >
+                Asia/Riyadh
               </span>
+              <style>{`@media(min-width:640px){#region-pill{display:inline-flex}}`}</style>
             </div>
-            <p className="text-xs sm:text-[13px] text-slate-400 max-w-xl">
+            <p style={{ fontSize: 11, color: '#334155', margin: 0, maxWidth: 400 }}>
               {motivationMessage}
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-              className="glass-card flex items-center gap-2 px-3 py-1.5 text-xs"
-            >
-              <span className="w-5 h-5 rounded-lg bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-[11px]">
-                {theme === 'dark' ? '🌙' : '☀️'}
-              </span>
-              <span className="hidden sm:inline">
-                {theme === 'dark' ? 'Dark mode' : 'Light mode'}
-              </span>
-            </button>
-
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <button
               type="button"
               onClick={handleExport}
-              className="hidden sm:inline-flex glass-card px-3 py-1.5 text-xs"
+              style={{
+                display: 'none',
+                padding: '6px 14px',
+                borderRadius: 8,
+                fontSize: 11,
+                fontWeight: 500,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                color: '#64748b',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              id="export-btn"
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}
             >
-              Backup JSON
+              Backup
             </button>
+            <style>{`@media(min-width:640px){#export-btn{display:block}}`}</style>
 
             <button
               type="button"
               onClick={() => setIsImportOpen(true)}
-              className="hidden sm:inline-flex glass-card px-3 py-1.5 text-xs"
+              style={{
+                display: 'none',
+                padding: '6px 14px',
+                borderRadius: 8,
+                fontSize: 11,
+                fontWeight: 500,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                color: '#64748b',
+                cursor: 'pointer',
+              }}
+              id="import-btn"
             >
-              Restore JSON
+              Restore
             </button>
+            <style>{`@media(min-width:640px){#import-btn{display:block}}`}</style>
+
+            {/* Debt countdown pill */}
+            <div
+              style={{
+                padding: '5px 12px',
+                borderRadius: 8,
+                background: 'rgba(16,185,129,0.07)',
+                border: '1px solid rgba(16,185,129,0.15)',
+                fontSize: 11,
+                fontWeight: 600,
+                color: '#34d399',
+                fontFamily: "'Space Mono',monospace",
+                letterSpacing: '-0.01em',
+              }}
+            >
+              D-{debtDaysRemaining}
+            </div>
           </div>
         </header>
 
+        {/* Main content */}
         <main className="main-scroll">
           {activeSection === 'dashboard' && (
             <Dashboard
@@ -431,7 +520,6 @@ function App() {
               debtDaysRemaining={debtDaysRemaining}
             />
           )}
-
           {activeSection === 'goals' && (
             <Goals
               goals={state.goals}
@@ -440,21 +528,18 @@ function App() {
               onSelectedGoalChange={setSelectedGoalId}
             />
           )}
-
           {activeSection === 'finance' && (
             <Finance
               finances={state.finances}
               onChange={(finances) => updateSection({ finances })}
             />
           )}
-
           {activeSection === 'skills' && (
             <Skills
               skills={state.skills}
               onChange={(skills) => updateSection({ skills })}
             />
           )}
-
           {activeSection === 'calendar' && (
             <CalendarView
               calendar={state.calendar}
@@ -462,7 +547,6 @@ function App() {
               onChange={(calendar) => updateSection({ calendar })}
             />
           )}
-
           {activeSection === 'pomodoro' && (
             <Pomodoro
               pomodoro={state.pomodoro}
@@ -470,7 +554,6 @@ function App() {
               shortcutTick={pomodoroShortcutTick}
             />
           )}
-
           {activeSection === 'journal' && (
             <Journal
               journal={state.journal}
@@ -479,56 +562,70 @@ function App() {
           )}
         </main>
 
-        {/* Bottom navigation for mobile */}
+        {/* ── Bottom navigation (mobile) ─────────────────────────────── */}
         <nav className="bottom-nav">
-          {SECTIONS.map((sec) => (
+          {NAV.map(({ key, label, emoji }) => (
             <button
-              key={sec}
+              key={key}
               type="button"
-              onClick={() => setActiveSection(sec)}
-              className={`bottom-nav-item ${
-                activeSection === sec ? 'bottom-nav-item-active' : ''
-              }`}
+              onClick={() => setActiveSection(key)}
+              className={`bottom-nav-item ${activeSection === key ? 'bottom-nav-item-active' : ''}`}
             >
-              <span className="text-[16px]">
-                {sec === 'dashboard' && '🏠'}
-                {sec === 'goals' && '🎯'}
-                {sec === 'finance' && '💸'}
-                {sec === 'skills' && '📚'}
-                {sec === 'calendar' && '📆'}
-                {sec === 'pomodoro' && '⏱️'}
-                {sec === 'journal' && '📓'}
-              </span>
-              <span className="text-[10px] capitalize">
-                {sectionLabelFromKey(sec)}
-              </span>
+              <span style={{ fontSize: 18 }}>{emoji}</span>
+              <span>{label}</span>
             </button>
           ))}
         </nav>
       </div>
 
-      {/* Export modal */}
+      {/* ── Export modal ──────────────────────────────────────────────── */}
       {isExportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="glass-card w-full max-w-2xl p-4 sm:p-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="font-heading text-sm sm:text-base font-semibold">
-                Export JSON backup
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{ width: '100%', maxWidth: 600, padding: '24px', margin: '16px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <h2 style={{ fontFamily: "'Outfit',system-ui,sans-serif", fontWeight: 600, margin: 0 }}>
+                Export JSON Backup
               </h2>
               <button
                 type="button"
                 onClick={() => setIsExportOpen(false)}
-                className="pill text-xs"
+                className="pill"
+                style={{ cursor: 'pointer' }}
               >
                 Close (Esc)
               </button>
             </div>
-            <p className="text-xs text-slate-400">
-              Copy this JSON and store it safely. You can restore your full dashboard state
-              later.
+            <p style={{ fontSize: 12, color: '#475569', marginBottom: 12 }}>
+              Copy this JSON and store it safely. You can restore your full dashboard state later.
             </p>
             <textarea
-              className="w-full h-56 text-[11px] font-mono bg-black/50 border border-white/10 rounded-xl p-2.5 resize-none"
+              style={{
+                width: '100%',
+                height: 220,
+                fontSize: 11,
+                fontFamily: "'Space Mono',monospace",
+                background: 'rgba(0,0,0,0.5)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 10,
+                padding: '10px',
+                resize: 'none',
+                color: '#94a3b8',
+                outline: 'none',
+              }}
               value={exportJson}
               readOnly
             />
@@ -536,44 +633,80 @@ function App() {
         </div>
       )}
 
-      {/* Import modal */}
+      {/* ── Import modal ──────────────────────────────────────────────── */}
       {isImportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="glass-card w-full max-w-2xl p-4 sm:p-6 space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="font-heading text-sm sm:text-base font-semibold">
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'rgba(0,0,0,0.75)',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{ width: '100%', maxWidth: 600, padding: '24px', margin: '16px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <h2 style={{ fontFamily: "'Outfit',system-ui,sans-serif", fontWeight: 600, margin: 0 }}>
                 Restore from JSON
               </h2>
               <button
                 type="button"
                 onClick={() => setIsImportOpen(false)}
-                className="pill text-xs"
+                className="pill"
+                style={{ cursor: 'pointer' }}
               >
                 Cancel (Esc)
               </button>
             </div>
-            <p className="text-xs text-slate-400">
-              Paste a JSON export from this dashboard. This will overwrite the current
-              state.
+            <p style={{ fontSize: 12, color: '#475569', marginBottom: 12 }}>
+              Paste a JSON export from this dashboard. This will overwrite the current state.
             </p>
             <textarea
-              className="w-full h-56 text-[11px] font-mono bg-black/50 border border-white/10 rounded-xl p-2.5 resize-y"
+              style={{
+                width: '100%',
+                height: 220,
+                fontSize: 11,
+                fontFamily: "'Space Mono',monospace",
+                background: 'rgba(0,0,0,0.5)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 10,
+                padding: '10px',
+                resize: 'vertical',
+                color: '#94a3b8',
+                outline: 'none',
+              }}
               value={importJson}
               onChange={(e) => setImportJson(e.target.value)}
               placeholder="Paste exported JSON here..."
             />
-            <div className="flex justify-end gap-2 text-xs">
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
               <button
                 type="button"
                 onClick={() => setIsImportOpen(false)}
                 className="pill"
+                style={{ cursor: 'pointer' }}
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleImport}
-                className="pill bg-accentGreen/20 border-accentGreen/40 text-accentGreen-100"
+                style={{
+                  padding: '4px 16px',
+                  borderRadius: 999,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  background: 'rgba(16,185,129,0.12)',
+                  border: '1px solid rgba(16,185,129,0.3)',
+                  color: '#34d399',
+                  cursor: 'pointer',
+                }}
               >
                 Restore
               </button>
@@ -585,26 +718,4 @@ function App() {
   );
 }
 
-function sectionLabelFromKey(key) {
-  switch (key) {
-    case 'dashboard':
-      return 'Dashboard';
-    case 'goals':
-      return 'Goals';
-    case 'finance':
-      return 'Finance';
-    case 'skills':
-      return 'Skills';
-    case 'calendar':
-      return 'Calendar';
-    case 'pomodoro':
-      return 'Focus';
-    case 'journal':
-      return 'Journal';
-    default:
-      return key;
-  }
-}
-
 export default App;
-
