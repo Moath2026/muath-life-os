@@ -2,30 +2,68 @@ import { useApp } from '../../context/AppContext'
 import { LayoutDashboard, Heart, Timer, BookOpen, Wallet } from 'lucide-react'
 
 const NAV = [
-  { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
-  { id: 'health', label: 'Health', icon: Heart },
-  { id: 'focus', label: 'Focus', icon: Timer },
-  { id: 'learn', label: 'Learn', icon: BookOpen },
-  { id: 'finance', label: 'Money', icon: Wallet },
+  { id: 'dashboard', label: 'Home',   icon: LayoutDashboard },
+  { id: 'health',    label: 'Health', icon: Heart },
+  { id: 'focus',     label: 'Focus',  icon: Timer },
+  { id: 'learn',     label: 'Learn',  icon: BookOpen },
+  { id: 'finance',   label: 'Money',  icon: Wallet },
 ]
 
 export default function BottomNav() {
   const { view, setView } = useApp()
 
   return (
-    <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-bg-secondary/90 backdrop-blur-md border-t border-white/5 bottom-nav">
-      <div className="flex items-stretch">
+    <nav
+      className="lg:hidden fixed bottom-0 inset-x-0 z-40 bottom-nav-pad"
+      style={{
+        background: 'rgba(10,10,15,0.88)',
+        backdropFilter: 'blur(28px) saturate(200%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 -4px 32px rgba(0,0,0,0.4)',
+      }}
+    >
+      <div className="flex items-stretch px-1">
         {NAV.map(({ id, label, icon: Icon }) => {
           const active = view === id
           return (
             <button
               key={id}
               onClick={() => setView(id)}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 transition-all duration-150 ${active ? 'text-accent-green' : 'text-slate-500 hover:text-slate-300'}`}
+              className="flex-1 flex flex-col items-center justify-center gap-1 py-2.5 relative transition-all duration-200 select-none"
+              style={{ minHeight: 56 }}
             >
-              <Icon size={20} />
-              <span className="text-[10px] font-medium">{label}</span>
-              {active && <span className="absolute bottom-0 w-6 h-0.5 rounded-t-full bg-accent-green" />}
+              {/* Active indicator pill above icon */}
+              <span
+                className="absolute top-0 rounded-b-full transition-all duration-300"
+                style={{
+                  width: active ? 28 : 0,
+                  height: 3,
+                  background: active ? '#22c55e' : 'transparent',
+                  boxShadow: active ? '0 0 10px rgba(34,197,94,0.7)' : 'none',
+                  opacity: active ? 1 : 0,
+                }}
+              />
+
+              {/* Icon */}
+              <div
+                className="transition-all duration-200"
+                style={{
+                  color: active ? '#22c55e' : 'rgba(100,116,139,0.8)',
+                  transform: active ? 'scale(1.08)' : 'scale(1)',
+                  filter: active ? 'drop-shadow(0 0 6px rgba(34,197,94,0.5))' : 'none',
+                }}
+              >
+                <Icon size={22} strokeWidth={active ? 2.2 : 1.8} />
+              </div>
+
+              {/* Label */}
+              <span
+                className="text-[10px] font-medium leading-none transition-colors duration-200"
+                style={{ color: active ? '#22c55e' : 'rgba(100,116,139,0.7)' }}
+              >
+                {label}
+              </span>
             </button>
           )
         })}

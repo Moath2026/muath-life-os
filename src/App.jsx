@@ -12,7 +12,7 @@ import Journal from './components/Journal'
 import Analytics from './components/Analytics'
 import Health from './components/Health'
 import AICoach from './components/AICoach'
-import { Menu } from 'lucide-react'
+import { Menu, Zap } from 'lucide-react'
 
 const VIEWS = {
   dashboard: Dashboard,
@@ -41,7 +41,7 @@ const VIEW_TITLES = {
   journal: 'Journal',
   analytics: 'Analytics',
   health: 'Health',
-  aicoach: 'AI Coach ✨',
+  aicoach: 'AI Coach',
 }
 
 function AppInner() {
@@ -60,44 +60,63 @@ function AppInner() {
   }, [])
 
   const title = VIEW_TITLES[view] || 'Dashboard'
-  const today = new Date()
-  const greeting = today.getHours() < 12 ? 'Good morning' : today.getHours() < 17 ? 'Good afternoon' : 'Good evening'
+  const isHome = view === 'dashboard'
 
   return (
-    <div className="flex h-screen overflow-hidden bg-bg-primary">
+    // h-dvh: uses 100dvh which correctly excludes iOS browser chrome
+    <div className="flex h-dvh overflow-hidden bg-bg-primary">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top bar */}
-        <header className="flex items-center justify-between px-5 py-4 border-b border-white/5 bg-bg-secondary/50 backdrop-blur-sm shrink-0">
+
+        {/* ── Header ── */}
+        <header
+          className="flex items-center justify-between shrink-0 border-b border-white/5 header-pad"
+          style={{
+            background: 'rgba(10,10,15,0.85)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          }}
+        >
           <div className="flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-400 hover:text-white p-1">
-              <Menu size={20} />
+            {/* Hamburger — mobile only */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden text-slate-400 hover:text-white transition-colors -ml-1 p-1 rounded-lg hover:bg-white/8"
+              aria-label="Open menu"
+            >
+              <Menu size={22} />
             </button>
-            <div>
-              <h1 className="font-heading font-bold text-base text-white leading-tight">{title}</h1>
-              {view === 'dashboard' && (
-                <p className="text-xs text-slate-500">{greeting}, Muath 👋</p>
-              )}
+
+            {/* Logo mark — desktop only (sidebar handles it on mobile via hamburger) */}
+            <div className="hidden lg:flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-md shadow-green-500/25">
+                <Zap size={14} className="text-white" />
+              </div>
             </div>
+
+            {/* Page title */}
+            <h1 className="font-heading font-bold text-base text-white leading-none">
+              {isHome ? 'Life OS' : title}
+            </h1>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-slate-500 hidden sm:block font-mono">
-              {today.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-            </span>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-green-500/20">
-              M
-            </div>
+
+          {/* Right side — avatar */}
+          <div
+            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg shadow-green-500/20 select-none"
+            style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}
+          >
+            M
           </div>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-5 animate-fade-in">
+        {/* ── Content ── */}
+        <main className="flex-1 overflow-y-auto scroll-ios p-4 sm:p-5 animate-fade-in">
           <Component />
         </main>
       </div>
 
-      {/* Mobile bottom nav */}
+      {/* Mobile bottom tab bar */}
       <BottomNav />
     </div>
   )
