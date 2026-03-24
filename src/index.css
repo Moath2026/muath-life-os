@@ -150,7 +150,7 @@
 
   /* Input */
   .input-field {
-    @apply w-full px-3.5 py-3 bg-bg-tertiary/80 border border-white/8 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-accent-blue/50 focus:bg-bg-secondary/80 transition-colors;
+    @apply w-full px-3.5 py-3 bg-bg-tertiary/80 border border-white/10 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-accent-blue/50 focus:bg-bg-secondary/80 transition-colors;
     font-size: 16px; /* prevents iOS zoom */
   }
 
