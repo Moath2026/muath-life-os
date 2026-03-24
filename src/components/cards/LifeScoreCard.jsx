@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useApp } from '../../context/AppContext'
-import { ChevronDown, ChevronUp, TrendingUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
-function computeScore({ health, habits, pomodoro, skills }) {
+function computeScore({ health, habits, pomodoro, skills, finance }) {
   // Health: weight progress + calories + protein
   const weightProgress = Math.min(100, Math.round(((79 - health.weight) / (79 - health.weightTarget)) * 100))
   const calPct = Math.min(100, Math.round((health.calories / health.caloriesTarget) * 100))
@@ -23,8 +23,12 @@ function computeScore({ health, habits, pomodoro, skills }) {
     ? Math.round(aiSkills.reduce((s, sk) => s + sk.progress, 0) / aiSkills.length)
     : 0
 
-  // Finance: expenses vs income (simplified)
-  const financeScore = 72 // static demo value
+  // Finance: surplus ratio vs income (100 = saving 30%+, 50 = break-even, 0 = -25% deficit)
+  const totalExpenses = finance.expenses.reduce((s, e) => s + e.amount, 0)
+  const totalDebtPayments = finance.debts.reduce((s, d) => s + d.monthlyPayment, 0)
+  const surplus = finance.monthlyIncome - totalExpenses - totalDebtPayments
+  const surplusRatio = surplus / (finance.monthlyIncome || 1)
+  const financeScore = Math.max(0, Math.min(100, Math.round(50 + surplusRatio * 200)))
 
   const total = Math.round(
     healthScore * 0.25 +
@@ -54,9 +58,25 @@ function scoreColor(score) {
 }
 
 export default function LifeScoreCard() {
-  const { health, habits, pomodoro, skills } = useApp()
+  const { health, habits, pomodoro, skills, finance } = useApp()
   const [expanded, setExpanded] = useState(false)
-  const { total, breakdown } = computeScore({ health, habits, pomodoro, skills })
+  const [weekAgoScore, setWeekAgoScore] = useState(null)
+  const { total, breakdown } = computeScore({ health, habits, pomodoro, skills, finance })
+
+  // Track score history in localStorage for real trend
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10)
+    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10)
+    const history = JSON.parse(localStorage.getItem('dashboard_score_history') || '{}')
+    history[today] = total
+    // Prune entries older than 30 days
+    const cutoff = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10)
+    Object.keys(history).forEach(d => { if (d < cutoff) delete history[d] })
+    localStorage.setItem('dashboard_score_history', JSON.stringify(history))
+    setWeekAgoScore(history[weekAgo] ?? null)
+  }, [total])
+
+  const trend = weekAgoScore !== null ? total - weekAgoScore : null
 
   const radius = 64
   const stroke = 8
@@ -91,10 +111,27 @@ export default function LifeScoreCard() {
       </div>
 
       {/* Trend */}
-      <div className="flex items-center gap-1 mt-2 text-accent-green">
-        <TrendingUp size={13} />
-        <span className="text-xs font-medium">+3 vs last week</span>
-      </div>
+      {trend === null ? (
+        <div className="flex items-center gap-1 mt-2 text-slate-500">
+          <Minus size={13} />
+          <span className="text-xs font-medium">No data yet</span>
+        </div>
+      ) : trend > 0 ? (
+        <div className="flex items-center gap-1 mt-2 text-accent-green">
+          <TrendingUp size={13} />
+          <span className="text-xs font-medium">+{trend} vs last week</span>
+        </div>
+      ) : trend < 0 ? (
+        <div className="flex items-center gap-1 mt-2 text-red-400">
+          <TrendingDown size={13} />
+          <span className="text-xs font-medium">{trend} vs last week</span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-1 mt-2 text-slate-500">
+          <Minus size={13} />
+          <span className="text-xs font-medium">Same as last week</span>
+        </div>
+      )}
 
       {/* Breakdown */}
       {expanded && (
