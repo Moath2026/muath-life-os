@@ -63,7 +63,6 @@ function AppInner() {
   const isHome = view === 'dashboard'
 
   return (
-    // h-dvh: uses 100dvh which correctly excludes iOS browser chrome
     <div className="flex h-dvh overflow-hidden bg-bg-primary">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -71,9 +70,9 @@ function AppInner() {
 
         {/* ── Header ── */}
         <header
-          className="flex items-center justify-between shrink-0 border-b border-white/5 header-pad"
+          className="relative flex items-center justify-between shrink-0 header-pad"
           style={{
-            background: 'rgba(10,10,15,0.85)',
+            background: 'linear-gradient(180deg, rgba(10,10,15,0.96) 0%, rgba(10,10,15,0.88) 100%)',
             backdropFilter: 'blur(24px) saturate(180%)',
             WebkitBackdropFilter: 'blur(24px) saturate(180%)',
           }}
@@ -82,32 +81,69 @@ function AppInner() {
             {/* Hamburger — mobile only */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-slate-400 hover:text-white transition-colors -ml-1 p-1 rounded-lg hover:bg-white/10"
+              className="lg:hidden text-slate-400 hover:text-white transition-colors -ml-1 p-1.5 rounded-lg"
+              style={{ background: 'rgba(255,255,255,0)', minHeight: 36 }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0)'}
               aria-label="Open menu"
             >
-              <Menu size={22} />
+              <Menu size={21} />
             </button>
 
-            {/* Logo mark — desktop only (sidebar handles it on mobile via hamburger) */}
+            {/* Logo mark — desktop only */}
             <div className="hidden lg:flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-md shadow-green-500/25">
-                <Zap size={14} className="text-white" />
+              <div
+                className="w-7 h-7 rounded-lg flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #22c55e, #10b981)',
+                  boxShadow: '0 2px 8px rgba(34,197,94,0.3)',
+                }}
+              >
+                <Zap size={13} className="text-white" />
               </div>
             </div>
 
             {/* Page title */}
-            <h1 className="font-heading font-bold text-base text-white leading-none">
-              {isHome ? 'Life OS' : title}
-            </h1>
+            <div>
+              <h1 className="font-heading font-bold text-[15px] text-white leading-none tracking-tight">
+                {isHome ? 'Life OS' : title}
+              </h1>
+              {isHome && (
+                <p className="text-[10px] text-slate-600 mt-0.5 leading-none hidden sm:block font-mono">
+                  Mission Control
+                </p>
+              )}
+            </div>
           </div>
 
-          {/* Right side — avatar */}
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg shadow-green-500/20 select-none"
-            style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}
-          >
-            M
+          {/* Right side */}
+          <div className="flex items-center gap-3">
+            {/* Active status */}
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full" style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.15)' }}>
+              <span
+                className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"
+                style={{ boxShadow: '0 0 6px rgba(52,211,153,0.8)' }}
+              />
+              <span className="text-[10px] text-emerald-400 font-semibold tracking-wide">ACTIVE</span>
+            </div>
+
+            {/* Avatar */}
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white select-none cursor-default"
+              style={{
+                background: 'linear-gradient(135deg, #22c55e, #10b981)',
+                boxShadow: '0 0 0 2px rgba(34,197,94,0.2), 0 2px 8px rgba(34,197,94,0.2)',
+              }}
+            >
+              M
+            </div>
           </div>
+
+          {/* Bottom gradient separator */}
+          <div
+            className="absolute bottom-0 inset-x-0 h-px pointer-events-none"
+            style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.07) 20%, rgba(255,255,255,0.07) 80%, transparent 100%)' }}
+          />
         </header>
 
         {/* ── Content ── */}

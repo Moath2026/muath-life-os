@@ -1,5 +1,5 @@
 import { useApp } from '../../context/AppContext'
-import { BookOpen, Play } from 'lucide-react'
+import { BookOpen, Play, Timer } from 'lucide-react'
 
 const COURSE_COLORS = {
   'n8n Automation': '#22c55e',
@@ -11,14 +11,18 @@ const COURSE_COLORS = {
 function CourseBar({ name, progress, color }) {
   return (
     <div>
-      <div className="flex justify-between text-xs mb-1.5">
-        <span className="text-slate-300 font-medium">{name}</span>
-        <span style={{ color }}>{progress}%</span>
+      <div className="flex justify-between items-center text-xs mb-1.5">
+        <span className="text-slate-300 font-medium truncate mr-2">{name}</span>
+        <span className="font-bold tabular-nums flex-shrink-0" style={{ color }}>{progress}%</span>
       </div>
-      <div className="h-2 bg-bg-primary rounded-full overflow-hidden">
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
         <div
           className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${progress}%`, background: `linear-gradient(90deg, ${color}, ${color}aa)` }}
+          style={{
+            width: `${progress}%`,
+            background: `linear-gradient(90deg, ${color}, ${color}bb)`,
+            boxShadow: `0 0 8px ${color}40`,
+          }}
         />
       </div>
     </div>
@@ -33,15 +37,21 @@ export default function LearningCard({ onNavigate }) {
     <div className="glass-card p-5 flex flex-col gap-4 h-full">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <BookOpen size={16} className="text-accent-purple" />
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.12)' }}>
+            <BookOpen size={13} className="text-accent-purple" />
+          </div>
           <h3 className="font-heading font-semibold text-white text-sm">Learning</h3>
         </div>
-        <div className="text-xs text-slate-500">
-          🍅 {pomodoro.week} sessions this week
+        <div
+          className="flex items-center gap-1.5 text-xs text-slate-500 px-2 py-1 rounded-lg"
+          style={{ background: 'rgba(255,255,255,0.04)' }}
+        >
+          <Timer size={11} className="text-slate-600" />
+          <span>{pomodoro.week} sessions this week</span>
         </div>
       </div>
 
-      <div className="space-y-3 flex-1">
+      <div className="space-y-3.5 flex-1">
         {aiCourses.map(skill => (
           <CourseBar
             key={skill.id}
@@ -54,9 +64,13 @@ export default function LearningCard({ onNavigate }) {
 
       <button
         onClick={onNavigate}
-        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-accent-purple text-sm font-medium hover:bg-purple-500/20 transition-all duration-150 active:scale-95"
+        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-accent-purple text-sm font-semibold transition-all duration-150 active:scale-95"
+        style={{
+          background: 'rgba(139,92,246,0.1)',
+          border: '1px solid rgba(139,92,246,0.2)',
+        }}
       >
-        <Play size={14} />
+        <Play size={13} />
         Continue Learning
       </button>
     </div>

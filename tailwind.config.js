@@ -34,6 +34,8 @@ export default {
         'card-green': '0 0 0 1px rgba(34,197,94,0.1), 0 8px 40px rgba(0,0,0,0.4), 0 0 60px rgba(34,197,94,0.05), inset 0 1px 0 rgba(34,197,94,0.08)',
         'card-hover': '0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07)',
         'nav': '0 -1px 0 rgba(255,255,255,0.05), 0 -8px 32px rgba(0,0,0,0.4)',
+        'glow-green': '0 0 20px rgba(34,197,94,0.25)',
+        'glow-blue': '0 0 20px rgba(59,130,246,0.25)',
       },
       animation: {
         'fade-in': 'fadeIn 0.25s ease-out',
