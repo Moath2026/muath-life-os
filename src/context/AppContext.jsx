@@ -1,6 +1,10 @@
 import { createContext, useContext, useState, useCallback } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { genId, todayStr } from '../utils/helpers'
+import {
+  DEFAULT_BOOKS, DEFAULT_WORKOUTS, DEFAULT_GAMES,
+  DEFAULT_TRIPS, DEFAULT_MOOD, DEFAULT_MEDITATION, DEFAULT_SLEEP,
+} from '../data/mockData'
 
 // ── Default Data ──────────────────────────────────────────────────────────────
 const DEFAULT_GOALS = [
@@ -43,16 +47,11 @@ const DEFAULT_FINANCE = {
 const DEFAULT_POMODORO = { today: 0, week: 0, streak: 0, lastDate: '' }
 
 const DEFAULT_HEALTH = {
-  weight: 78.2,
-  weightTarget: 70,
-  calories: 1720,
-  caloriesTarget: 1800,
-  protein: 98,
-  proteinTarget: 130,
-  water: 6,
-  waterTarget: 8,
-  workoutsThisWeek: 4,
-  workoutsTarget: 5,
+  weight: 78.2, weightTarget: 70,
+  calories: 1720, caloriesTarget: 1800,
+  protein: 98, proteinTarget: 130,
+  water: 6, waterTarget: 8,
+  workoutsThisWeek: 4, workoutsTarget: 5,
   history: [],
 }
 
@@ -70,39 +69,49 @@ const AppContext = createContext(null)
 export function AppProvider({ children }) {
   const [view, setView] = useState('dashboard')
 
-  // Persisted state
-  const [goals, setGoals] = useLocalStorage('dashboard_goals', DEFAULT_GOALS)
-  const [skills, setSkills] = useLocalStorage('dashboard_skills', DEFAULT_SKILLS)
+  // ── Existing persisted state ───────────────────────────────────────────────
+  const [goals, setGoals]     = useLocalStorage('dashboard_goals',   DEFAULT_GOALS)
+  const [skills, setSkills]   = useLocalStorage('dashboard_skills',  DEFAULT_SKILLS)
   const [finance, setFinance] = useLocalStorage('dashboard_finance', DEFAULT_FINANCE)
   const [journal, setJournal] = useLocalStorage('dashboard_journal', [])
-  const [events, setEvents] = useLocalStorage('dashboard_events', [])
+  const [events, setEvents]   = useLocalStorage('dashboard_events',  [])
   const [pomodoro, setPomodoro] = useLocalStorage('dashboard_pomodoro', DEFAULT_POMODORO)
-  const [health, setHealth] = useLocalStorage('dashboard_health', DEFAULT_HEALTH)
-  const [habits, setHabits] = useLocalStorage('dashboard_habits', DEFAULT_HABITS)
+  const [health, setHealth]   = useLocalStorage('dashboard_health',  DEFAULT_HEALTH)
+  const [habits, setHabits]   = useLocalStorage('dashboard_habits',  DEFAULT_HABITS)
+
+  // ── New dimensions ─────────────────────────────────────────────────────────
+  const [books, setBooks]           = useLocalStorage('dashboard_books',      DEFAULT_BOOKS)
+  const [workouts, setWorkouts]     = useLocalStorage('dashboard_workouts',   DEFAULT_WORKOUTS)
+  const [games, setGames]           = useLocalStorage('dashboard_games',      DEFAULT_GAMES)
+  const [trips, setTrips]           = useLocalStorage('dashboard_trips',      DEFAULT_TRIPS)
+  const [moodLog, setMoodLog]       = useLocalStorage('dashboard_mood',       DEFAULT_MOOD)
+  const [meditation, setMeditation] = useLocalStorage('dashboard_meditation', DEFAULT_MEDITATION)
+  const [sleepLog, setSleepLog]     = useLocalStorage('dashboard_sleep',      DEFAULT_SLEEP)
 
   // ── Goals ──────────────────────────────────────────────────────────────────
-  const addGoal = useCallback((goal) => setGoals(g => [...g, { ...goal, id: genId(), createdAt: new Date().toISOString() }]), [])
-  const updateGoal = useCallback((id, updates) => setGoals(g => g.map(x => x.id === id ? { ...x, ...updates } : x)), [])
-  const deleteGoal = useCallback((id) => setGoals(g => g.filter(x => x.id !== id)), [])
-  const toggleGoal = useCallback((id) => setGoals(g => g.map(x => x.id === id ? { ...x, completed: !x.completed } : x)), [])
+  const addGoal    = useCallback((goal)    => setGoals(g => [...g, { ...goal, id: genId(), createdAt: new Date().toISOString() }]), [setGoals])
+  const updateGoal = useCallback((id, up) => setGoals(g => g.map(x => x.id === id ? { ...x, ...up } : x)), [setGoals])
+  const deleteGoal = useCallback((id)     => setGoals(g => g.filter(x => x.id !== id)), [setGoals])
+  const toggleGoal = useCallback((id)     => setGoals(g => g.map(x => x.id === id ? { ...x, completed: !x.completed } : x)), [setGoals])
 
   // ── Skills ─────────────────────────────────────────────────────────────────
-  const updateSkill = useCallback((id, progress) => setSkills(s => s.map(x => x.id === id ? { ...x, progress: Math.min(100, Math.max(0, progress)) } : x)), [])
+  const updateSkill = useCallback((id, progress) =>
+    setSkills(s => s.map(x => x.id === id ? { ...x, progress: Math.min(100, Math.max(0, progress)) } : x)), [setSkills])
 
   // ── Finance ────────────────────────────────────────────────────────────────
-  const addExpense = useCallback((expense) => setFinance(f => ({ ...f, expenses: [...f.expenses, { ...expense, id: genId() }] })), [])
-  const deleteExpense = useCallback((id) => setFinance(f => ({ ...f, expenses: f.expenses.filter(e => e.id !== id) })), [])
-  const updateDebt = useCallback((id, updates) => setFinance(f => ({ ...f, debts: f.debts.map(d => d.id === id ? { ...d, ...updates } : d) })), [])
-  const updateSavings = useCallback((amount) => setFinance(f => ({ ...f, savings: amount })), [])
+  const addExpense    = useCallback((expense) => setFinance(f => ({ ...f, expenses: [...f.expenses, { ...expense, id: genId() }] })), [setFinance])
+  const deleteExpense = useCallback((id)      => setFinance(f => ({ ...f, expenses: f.expenses.filter(e => e.id !== id) })), [setFinance])
+  const updateDebt    = useCallback((id, up)  => setFinance(f => ({ ...f, debts: f.debts.map(d => d.id === id ? { ...d, ...up } : d) })), [setFinance])
+  const updateSavings = useCallback((amount)  => setFinance(f => ({ ...f, savings: amount })), [setFinance])
 
   // ── Journal ────────────────────────────────────────────────────────────────
-  const addJournalEntry = useCallback((entry) => setJournal(j => [{ ...entry, id: genId(), date: todayStr(), createdAt: new Date().toISOString() }, ...j]), [])
-  const updateJournalEntry = useCallback((id, updates) => setJournal(j => j.map(e => e.id === id ? { ...e, ...updates } : e)), [])
-  const deleteJournalEntry = useCallback((id) => setJournal(j => j.filter(e => e.id !== id)), [])
+  const addJournalEntry    = useCallback((entry) => setJournal(j => [{ ...entry, id: genId(), date: todayStr(), createdAt: new Date().toISOString() }, ...j]), [setJournal])
+  const updateJournalEntry = useCallback((id, up) => setJournal(j => j.map(e => e.id === id ? { ...e, ...up } : e)), [setJournal])
+  const deleteJournalEntry = useCallback((id)    => setJournal(j => j.filter(e => e.id !== id)), [setJournal])
 
   // ── Events ─────────────────────────────────────────────────────────────────
-  const addEvent = useCallback((event) => setEvents(e => [...e, { ...event, id: genId() }]), [])
-  const deleteEvent = useCallback((id) => setEvents(e => e.filter(x => x.id !== id)), [])
+  const addEvent    = useCallback((event) => setEvents(e => [...e, { ...event, id: genId() }]), [setEvents])
+  const deleteEvent = useCallback((id)    => setEvents(e => e.filter(x => x.id !== id)), [setEvents])
 
   // ── Health ─────────────────────────────────────────────────────────────────
   const logHealth = useCallback((updates) => {
@@ -111,7 +120,7 @@ export function AppProvider({ children }) {
       const history = [entry, ...h.history.filter(e => e.date !== todayStr())].slice(0, 30)
       return { ...h, ...updates, history }
     })
-  }, [])
+  }, [setHealth])
 
   // ── Habits ─────────────────────────────────────────────────────────────────
   const toggleHabit = useCallback((id) => {
@@ -120,11 +129,10 @@ export function AppProvider({ children }) {
       const done = !h.doneToday
       return { ...h, doneToday: done, streak: done ? h.streak + 1 : Math.max(0, h.streak - 1) }
     }))
-  }, [])
-
-  const addHabit = useCallback((name, icon = '✅') => {
-    setHabits(hs => [...hs, { id: genId(), name, icon, streak: 0, doneToday: false }])
-  }, [])
+  }, [setHabits])
+  const addHabit = useCallback((name, icon = '✅') =>
+    setHabits(hs => [...hs, { id: genId(), name, icon, streak: 0, doneToday: false }]), [setHabits])
+  const deleteHabit = useCallback((id) => setHabits(hs => hs.filter(h => h.id !== id)), [setHabits])
 
   // ── Pomodoro ───────────────────────────────────────────────────────────────
   const incrementPomodoro = useCallback(() => {
@@ -139,19 +147,79 @@ export function AppProvider({ children }) {
         lastDate: today,
       }
     })
-  }, [])
+  }, [setPomodoro])
+
+  // ── Books (Learning) ───────────────────────────────────────────────────────
+  const addBook    = useCallback((book)    => setBooks(b => [...b, { ...book, id: genId(), createdAt: new Date().toISOString() }]), [setBooks])
+  const updateBook = useCallback((id, up)  => setBooks(b => b.map(x => x.id === id ? { ...x, ...up } : x)), [setBooks])
+  const deleteBook = useCallback((id)      => setBooks(b => b.filter(x => x.id !== id)), [setBooks])
+
+  // ── Workouts (Health) ──────────────────────────────────────────────────────
+  const addWorkout    = useCallback((w)       => setWorkouts(ws => [{ ...w, id: genId(), createdAt: new Date().toISOString() }, ...ws]), [setWorkouts])
+  const updateWorkout = useCallback((id, up)  => setWorkouts(ws => ws.map(x => x.id === id ? { ...x, ...up } : x)), [setWorkouts])
+  const deleteWorkout = useCallback((id)      => setWorkouts(ws => ws.filter(x => x.id !== id)), [setWorkouts])
+
+  // ── Games (Hobbies) ────────────────────────────────────────────────────────
+  const addGame    = useCallback((game)   => setGames(g => [...g, { ...game, id: genId(), createdAt: new Date().toISOString() }]), [setGames])
+  const updateGame = useCallback((id, up) => setGames(g => g.map(x => x.id === id ? { ...x, ...up } : x)), [setGames])
+  const deleteGame = useCallback((id)     => setGames(g => g.filter(x => x.id !== id)), [setGames])
+
+  // ── Trips (Travel) ─────────────────────────────────────────────────────────
+  const addTrip           = useCallback((trip)   => setTrips(t => [...t, { ...trip, id: genId(), createdAt: new Date().toISOString(), checklist: [] }]), [setTrips])
+  const updateTrip        = useCallback((id, up)  => setTrips(t => t.map(x => x.id === id ? { ...x, ...up } : x)), [setTrips])
+  const deleteTrip        = useCallback((id)      => setTrips(t => t.filter(x => x.id !== id)), [setTrips])
+  const toggleChecklist   = useCallback((tripId, itemId) =>
+    setTrips(t => t.map(trip => trip.id !== tripId ? trip : {
+      ...trip,
+      checklist: trip.checklist.map(c => c.id === itemId ? { ...c, done: !c.done } : c),
+    })), [setTrips])
+  const addChecklistItem  = useCallback((tripId, item) =>
+    setTrips(t => t.map(trip => trip.id !== tripId ? trip : {
+      ...trip,
+      checklist: [...trip.checklist, { id: genId(), item, done: false }],
+    })), [setTrips])
+
+  // ── Wellness ───────────────────────────────────────────────────────────────
+  const logMood      = useCallback((entry)   => setMoodLog(m => [{ ...entry, id: genId(), date: todayStr() }, ...m.filter(x => x.date !== todayStr())]), [setMoodLog])
+  const deleteMood   = useCallback((id)      => setMoodLog(m => m.filter(x => x.id !== id)), [setMoodLog])
+
+  const addMeditation    = useCallback((session) => setMeditation(m => [{ ...session, id: genId(), date: todayStr(), createdAt: new Date().toISOString() }, ...m]), [setMeditation])
+  const deleteMeditation = useCallback((id)      => setMeditation(m => m.filter(x => x.id !== id)), [setMeditation])
+
+  const logSleep    = useCallback((record) => setSleepLog(s => [{ ...record, id: genId(), date: todayStr() }, ...s.filter(x => x.date !== todayStr())]), [setSleepLog])
+  const deleteSleep = useCallback((id)     => setSleepLog(s => s.filter(x => x.id !== id)), [setSleepLog])
 
   return (
     <AppContext.Provider value={{
       view, setView,
+      // Goals
       goals, addGoal, updateGoal, deleteGoal, toggleGoal,
+      // Skills
       skills, updateSkill,
+      // Finance
       finance, setFinance, addExpense, deleteExpense, updateDebt, updateSavings,
+      // Journal
       journal, addJournalEntry, updateJournalEntry, deleteJournalEntry,
+      // Events
       events, addEvent, deleteEvent,
+      // Pomodoro
       pomodoro, incrementPomodoro,
+      // Health (metrics)
       health, logHealth,
-      habits, toggleHabit, addHabit,
+      // Habits
+      habits, toggleHabit, addHabit, deleteHabit,
+      // Learning
+      books, addBook, updateBook, deleteBook,
+      // Workouts
+      workouts, addWorkout, updateWorkout, deleteWorkout,
+      // Games
+      games, addGame, updateGame, deleteGame,
+      // Travel
+      trips, addTrip, updateTrip, deleteTrip, toggleChecklist, addChecklistItem,
+      // Wellness
+      moodLog, logMood, deleteMood,
+      meditation, addMeditation, deleteMeditation,
+      sleepLog, logSleep, deleteSleep,
     }}>
       {children}
     </AppContext.Provider>

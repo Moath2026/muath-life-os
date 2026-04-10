@@ -12,29 +12,37 @@ import Journal from './components/Journal'
 import Analytics from './components/Analytics'
 import Health from './components/Health'
 import AICoach from './components/AICoach'
+import LearningView from './components/Dimensions/Learning/LearningView'
+import HealthView from './components/Dimensions/Health/HealthView'
+import HobbiesView from './components/Dimensions/Hobbies/HobbiesView'
+import TravelView from './components/Dimensions/Travel/TravelView'
+import WellnessView from './components/Dimensions/Wellness/WellnessView'
 import { Menu, Zap } from 'lucide-react'
 
 const VIEWS = {
   dashboard: Dashboard,
   goals: Goals,
   finance: Finance,
-  learn: Skills,
+  learn: LearningView,
   skills: Skills,
   calendar: CalendarView,
   focus: Pomodoro,
   pomodoro: Pomodoro,
   journal: Journal,
   analytics: Analytics,
-  health: Health,
+  health: HealthView,
   aicoach: AICoach,
+  hobbies: HobbiesView,
+  travel: TravelView,
+  wellness: WellnessView,
 }
 
 const VIEW_TITLES = {
   dashboard: 'Dashboard',
   goals: 'Goals',
   finance: 'Finance',
-  learn: 'Learn',
-  skills: 'Learn',
+  learn: 'Learning',
+  skills: 'Skills',
   calendar: 'Calendar',
   focus: 'Focus',
   pomodoro: 'Focus',
@@ -42,6 +50,9 @@ const VIEW_TITLES = {
   analytics: 'Analytics',
   health: 'Health',
   aicoach: 'AI Coach',
+  hobbies: 'Hobbies',
+  travel: 'Travel',
+  wellness: 'Wellness',
 }
 
 function AppInner() {

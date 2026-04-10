@@ -1,12 +1,12 @@
 import { useApp } from '../../context/AppContext'
-import { LayoutDashboard, Heart, Timer, BookOpen, Wallet } from 'lucide-react'
+import { LayoutDashboard, Heart, Target, BookOpen, Brain } from 'lucide-react'
 
 const NAV = [
-  { id: 'dashboard', label: 'Home',   icon: LayoutDashboard },
-  { id: 'health',    label: 'Health', icon: Heart },
-  { id: 'focus',     label: 'Focus',  icon: Timer },
-  { id: 'learn',     label: 'Learn',  icon: BookOpen },
-  { id: 'finance',   label: 'Money',  icon: Wallet },
+  { id: 'dashboard', label: 'Home',     icon: LayoutDashboard },
+  { id: 'goals',     label: 'Goals',   icon: Target },
+  { id: 'health',    label: 'Health',  icon: Heart },
+  { id: 'learn',     label: 'Learn',   icon: BookOpen },
+  { id: 'wellness',  label: 'Wellness', icon: Brain },
 ]
 
 export default function BottomNav() {

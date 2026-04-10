@@ -3,15 +3,19 @@ import { backupData } from '../../utils/helpers'
 import {
   LayoutDashboard, Heart, Timer, BookOpen, Wallet,
   Calendar, Bot, BookMarked, BarChart3, Download, X, Zap, Target,
+  Gamepad2, Plane, Brain,
 } from 'lucide-react'
 
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'health',    label: 'Health',    icon: Heart },
-  { id: 'focus',     label: 'Focus',     icon: Timer },
   { id: 'goals',     label: 'Goals',     icon: Target },
-  { id: 'learn',     label: 'Learn',     icon: BookOpen },
+  { id: 'health',    label: 'Health',    icon: Heart },
+  { id: 'learn',     label: 'Learning',  icon: BookOpen },
+  { id: 'wellness',  label: 'Wellness',  icon: Brain },
+  { id: 'hobbies',   label: 'Hobbies',   icon: Gamepad2 },
+  { id: 'travel',    label: 'Travel',    icon: Plane },
   { id: 'finance',   label: 'Finance',   icon: Wallet },
+  { id: 'focus',     label: 'Focus',     icon: Timer },
   { id: 'calendar',  label: 'Calendar',  icon: Calendar },
   { id: 'aicoach',   label: 'AI Coach',  icon: Bot },
   { id: 'journal',   label: 'Journal',   icon: BookMarked },
